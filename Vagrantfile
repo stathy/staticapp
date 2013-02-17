@@ -7,10 +7,6 @@ ID = Time.new.strftime("%Y%m%d_%H_%M_%S")
 
 Vagrant::Config.run do |config|
 
-    chef_env = create_chef_env()
-    vagrant_group = "/#{chef_env}"
-    hash = Digest::MD5.new.hexdigest(chef_env)
-
     config.vm.box = "ubuntu_10_pkg"
 
     {
@@ -59,6 +55,10 @@ Vagrant::Config.run do |config|
 
     }.each do |name,cfg|
 
+        chef_env = create_chef_env(cfg[:env] || ENV['CHEF_ENV'])
+        vagrant_group = "/#{chef_env}"
+        hash = Digest::MD5.new.hexdigest(chef_env)
+
         config.vm.define name do |vm_cfg|
             vm_cfg.vm.host_name = "java-#{name}-#{hash}"
             vm_cfg.vm.network :hostonly, cfg[:ip] if cfg[:ip]
@@ -83,7 +83,7 @@ Vagrant::Config.run do |config|
                 chef.provisioning_path = "/etc/chef"
                 chef.log_level = :info
     #            chef.output = 'doc'
-                chef.environment = cfg[:env] || chef_env
+                chef.environment = chef_env
                 chef.json = cfg[:attr] if cfg[:attr].is_a?(Hash)
     
                 if cfg[:run_list].nil?
@@ -103,7 +103,7 @@ Vagrant::Config.run do |config|
 
 end
 
-def create_chef_env(ce = ENV['CHEF_ENV'] || '_default')
+def create_chef_env(ce = '_default')
     url = "https://chef.localdomain/organizations/opscode"
     c_name = "chef"
     c_file = %Q(#{ENV['HOME']}/.chef/#{c_name}@chef.localdomain.pem)

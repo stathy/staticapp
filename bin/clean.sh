@@ -1,5 +1,5 @@
-echo "Pruning attributes in Production environment"
-knife environment from file "./environments/production.json" > /dev/null
+echo "Pruning attributes in static environment"
+knife environment from file "./environments/static.json" > /dev/null
 
 NODES=$( knife exec -E 'nodes.all { |n| puts n.name if n.name.match("^java") }' )
 for n in $NODES; do
