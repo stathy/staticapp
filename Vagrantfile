@@ -14,57 +14,6 @@ Vagrant::Config.run do |config|
     config.vm.box = "ubuntu_10_pkg"
 
     {
-      :single => {
-          :ip       => '192.168.65.90',
-          :memory   => 756,
-          :roles     => %w( base_ubuntu dbapp_db dbapp_app dbapp_lb )
-      },
-      :db => {
-          :ip       => '192.168.65.95',
-          :memory   => 356,
-          :roles     => %w( base_ubuntu dbapp_db )
-       },
-      :app1 => {
-          :ip       => '192.168.65.101',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :app2 => {
-          :ip       => '192.168.65.102',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :app10 => {
-          :ip       => '192.168.65.110',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :app11 => {
-          :ip       => '192.168.65.111',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :app20 => {
-          :ip       => '192.168.65.120',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :app21 => {
-          :ip       => '192.168.65.121',
-          :memory   => 512,
-          :roles     => %w( base_ubuntu dbapp_app )
-      },
-      :lb => {
-          :ip       => '192.168.65.131',
-          :memory   => 256,
-          :roles     => %w( base_ubuntu dbapp_lb )
-      },
-      :cd => {
-          :box    => 'cd',
-          :ip     => '192.168.65.201',
-          :memory => 1512,
-          :roles  => %w( continuous_delivery )
-      },
       :a1 => {
             :ip       => '192.168.65.211',
             :memory   => 256,
