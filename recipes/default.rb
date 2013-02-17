@@ -5,6 +5,11 @@
 
 include_recipe "java"
 
+case node.platform
+when "centos","redhat","fedora"
+  include_recipe "jpackage"
+end
+
 #Scenario 1
 #Master should install a tar file containing tomcat in user space on 5 to 6nodes by un tarring the tar ball and executing the start server shell command for tomcat.
 value_for_platform(
@@ -63,6 +68,7 @@ end
 #7) finally if both third and forth node succeeds then move to fifth and sixth node to do the deployments.
 rolling_deploy_leg 'install to current' do
   app_name 'static'
+  checksum node['apps']['static']['checksum']
   action :ready
 end
 
