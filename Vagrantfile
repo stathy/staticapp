@@ -12,49 +12,49 @@ Vagrant::Config.run do |config|
     {
       :a1 => {
             :ip       => '192.168.65.211',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a2 => {
             :ip       => '192.168.65.212',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a3 => {
             :ip       => '192.168.65.213',
-            :memory   => 256,
+            :memory   => 374,
             :env      => 'static',
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a4 => {
             :ip       => '192.168.65.214',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a5 => {
             :ip       => '192.168.65.215',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a6 => {
             :ip       => '192.168.65.216',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :update => {
             :ip       => '192.168.65.250',
-            :memory   => 256,
+            :memory   => 374,
             :run_list => %w( role[base_centos] )
       },
 

@@ -155,6 +155,7 @@ end
 rolling_deploy_node "successful deploy" do
   app_name 'static'
   action :nothing
+  checksum node['apps']['static']['checksum']
 
   subscribes :success, resources('http_request[validate deployment]')
 end
