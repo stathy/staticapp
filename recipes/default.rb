@@ -29,7 +29,6 @@ end
 %w( shared releases ).each do |dir|
   directory "#{node['apps']['static']['deploy_dir']}/#{dir}" do
     owner 'nobody'
-    group 'nogroup'
     mode '0755'
     recursive true
   end
@@ -86,7 +85,6 @@ end
 template "#{node['apps']['static']['deploy_dir']}/shared/static.xml" do
   source "context.xml.erb"
   owner "nobody"
-  group "nogroup"
   mode "644"
   variables(
     :app => 'static',
