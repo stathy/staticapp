@@ -1,7 +1,8 @@
 {
   "name": "static",
   "default_attributes": {
-    "apps": {}
+    "apps": {
+    }
   },
   "override_attributes": {
     "apps": {

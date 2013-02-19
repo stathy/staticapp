@@ -67,7 +67,7 @@ end
 #7) finally if both third and forth node succeeds then move to fifth and sixth node to do the deployments.
 rolling_deploy_leg 'install to current' do
   app_name 'static'
-  checksum node['apps']['static']['checksum']
+  desired node['apps']['static']['checksum']
   action :ready
 end
 
@@ -155,7 +155,7 @@ end
 rolling_deploy_node "successful deploy" do
   app_name 'static'
   action :nothing
-  checksum node['apps']['static']['checksum']
+  desired node['apps']['static']['checksum']
 
   subscribes :success, resources('http_request[validate deployment]')
 end
