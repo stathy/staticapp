@@ -20,13 +20,16 @@
 
 require 'digest'
 
-static_artifact_path = File.join( Chef::Config['file_cache_path'], "#{node['apps']['static']['artifact_sha256']}.war"
+static_artifact_path = File.join( Chef::Config['file_cache_path'], "#{node['apps']['static']['artifact_sha256']}.war" )
 
 remote_file 'static' do
   path 
   source node['apps']['static']['source']
   mode "0644"
   checksum node['apps']['static']['artifact_sha256']
+
+  ignore_failure true
+  retries 0
 
   action :create
 end

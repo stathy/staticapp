@@ -16,10 +16,10 @@ Vagrant::Config.run do |config|
     {
       :monitor => {
             :ip       => '192.168.65.205',
-            :memory   => 128,
-            :run_list => %w( role[base_centos] recipe[staticapp::monitor] ),
+            :memory   => 256,
+            :run_list => %w( role[base_core] recipe[staticapp::monitor] ),
             :env      => 'static',
-            :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => {} } } }
+            :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'leg' => 0 } } } }
       },
       :a1 => {
             :ip       => '192.168.65.211',
