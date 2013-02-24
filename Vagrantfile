@@ -1,5 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+#
+# CreatedBy:: Stathy Touloumis <stathy@opscode.com>
+#
+#
 
 require 'digest'
 
@@ -10,6 +14,13 @@ Vagrant::Config.run do |config|
     config.vm.box = "centos_58_pkg"
 
     {
+      :monitor => {
+            :ip       => '192.168.65.205',
+            :memory   => 128,
+            :run_list => %w( role[base_centos] recipe[staticapp::monitor] ),
+            :env      => 'static',
+            :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => {} } } }
+      },
       :a1 => {
             :ip       => '192.168.65.211',
             :memory   => 374,
@@ -51,11 +62,6 @@ Vagrant::Config.run do |config|
             :run_list => %w( role[base_centos] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
-      },
-      :update => {
-            :ip       => '192.168.65.250',
-            :memory   => 374,
-            :run_list => %w( role[base_centos] )
       },
 
     }.each do |name,cfg|
