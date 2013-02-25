@@ -19,19 +19,23 @@
 #
 
 require 'digest'
+require 'fileutils'
 
 static_artifact_path = File.join( Chef::Config['file_cache_path'], "#{node['apps']['static']['artifact_sha256']}.war" )
 
 remote_file 'static' do
-  path 
+  path static_artifact_path
   source node['apps']['static']['source']
   mode "0644"
   checksum node['apps']['static']['artifact_sha256']
 
-  ignore_failure true
+#  ignore_failure true
   retries 0
-
   action :create
+
+# Not initializing, need to have checksum and source defined, set from Jenkins to env attributes,
+# handled implicitly by provider or explict below
+#  only_if { node['apps']['static']['artifact_sha256'].defined? && node['apps']['static']['source'].defined? }
 end
 
 rolling_deploy_artifact 'static' do
@@ -40,6 +44,11 @@ rolling_deploy_artifact 'static' do
   artifact_path static_artifact_path
   cookbook_name 'static_artifact'
 
-  action :staged
+  action :nothing
+
+  subscribes resources('remote_file[static]')
+
+# checksum of assumed and what is on file needs to match, handled implicitly by provider or explict below
+#  only_if { Digest::SHA256.file( static_artifact_path ).eql?( node['apps']['static']['artifact_sha256'] ) }
 end
 
