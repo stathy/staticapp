@@ -46,7 +46,7 @@ rolling_deploy_artifact 'static' do
 
   action :nothing
 
-  subscribes resources('remote_file[static]')
+  subscribes :deploy, resources('remote_file[static]')
 
 # checksum of assumed and what is on file needs to match, handled implicitly by provider or explict below
 #  only_if { Digest::SHA256.file( static_artifact_path ).eql?( node['apps']['static']['artifact_sha256'] ) }

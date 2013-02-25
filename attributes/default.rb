@@ -17,7 +17,7 @@
 # limitations under the License.
 
 default["apps"]['static']['source'] = 'http://chef.localdomain:10080/artifacts/static.war'
-default["apps"]['static']['checksum'] = '8ac5262dce6975dd360e0ad0a9288b5967a6af3c1c64bc4e472dec85e7ec36e7'
+default["apps"]['static']['artifact_sha256'] = '8ac5262dce6975dd360e0ad0a9288b5967a6af3c1c64bc4e472dec85e7ec36e7'
 
 default["apps"]['static']['rolling_deploy']['bootstrap_group'] = Time.new.strftime("%Y%m%d_%H_%M_%S")
 default["apps"]['static']['rolling_deploy']['leg'] = 0
