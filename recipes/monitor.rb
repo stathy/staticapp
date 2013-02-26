@@ -25,17 +25,18 @@ static_artifact_path = File.join( Chef::Config['file_cache_path'], "#{node['apps
 
 remote_file 'static' do
   path static_artifact_path
-  source node['apps']['static']['source']
+  source node['apps']['static']['artifact_build'] || 'http://foo/bar.war'
   mode "0644"
   checksum node['apps']['static']['artifact_sha256']
 
+# When initializing, values for artifact_sha256 may not exist so ignore failure or check idempotence
 #  ignore_failure true
   retries 0
   action :create
 
 # Not initializing, need to have checksum and source defined, set from Jenkins to env attributes,
-# handled implicitly by provider or explict below
-#  only_if { node['apps']['static']['artifact_sha256'].defined? && node['apps']['static']['source'].defined? }
+# handled implicitly by prov
+  not_if { node['apps']['static']['artifact_sha256'].nil? && node['apps']['static']['artifact_build'].nil? }
 end
 
 rolling_deploy_artifact 'static' do
@@ -49,6 +50,9 @@ rolling_deploy_artifact 'static' do
   subscribes :deploy, resources('remote_file[static]')
 
 # checksum of assumed and what is on file needs to match, handled implicitly by provider or explict below
-#  only_if { Digest::SHA256.file( static_artifact_path ).eql?( node['apps']['static']['artifact_sha256'] ) }
+  only_if {
+    ::File.exists?( static_artifact_path ) &&
+    Digest::SHA256.file( static_artifact_path ).eql?( node['apps']['static']['artifact_sha256'] )
+  }
 end
 

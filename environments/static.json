@@ -1,15 +1,12 @@
 {
   "name": "static",
   "default_attributes": {
-    "apps": {
-    }
+    "created_by":null,
+    "created_date":null
   },
   "override_attributes": {
     "apps": {
-      "static": {
-        "source":null,
-        "artifact_sha256":null
-      }
+      "static": {}
     }
   },
   "json_class": "Chef::Environment",

@@ -5,7 +5,13 @@
 #
 #
 
+require 'chef/environment'
+require 'chef/knife'
+require 'chef'
+
 require 'digest'
+
+Chef::Log.level = :info
 
 ID = Time.new.strftime("%Y%m%d_%H_%M_%S")
 
@@ -66,9 +72,9 @@ Vagrant::Config.run do |config|
 
     }.each do |name,cfg|
 
-        chef_env = create_chef_env(cfg[:env] || ENV['CHEF_ENV'])
-        vagrant_group = "/#{chef_env}"
-        hash = Digest::MD5.new.hexdigest(chef_env)
+        group_label = cfg[:env] || '_default'
+        hash = Digest::MD5.new.hexdigest(group_label)
+        vagrant_group = "/#{group_label}"
 
         config.vm.define name do |vm_cfg|
             vm_cfg.vm.host_name = "java-#{name}-#{hash}"
@@ -87,6 +93,7 @@ Vagrant::Config.run do |config|
             end
     
             vm_cfg.vm.provision :chef_client do |chef|
+                chef_env = create_chef_env(group_label)
                 chef.chef_server_url = "https://chef.localdomain/organizations/opscode"
                 chef.validation_key_path = "#{ENV['HOME']}/.chef/chef_localdomain-opscode-validator.pem"
                 chef.validation_client_name = "opscode-validator"
@@ -115,30 +122,27 @@ Vagrant::Config.run do |config|
 end
 
 def create_chef_env(ce = '_default')
-    url = "https://chef.localdomain/organizations/opscode"
-    c_name = "chef"
-    c_file = %Q(#{ENV['HOME']}/.chef/#{c_name}@chef.localdomain.pem)
+    Chef::Config.from_file("#{ENV['HOME']}/.chef/knife.rb")
 
-    ce ||= '_default'
-    unless ce == '_default'
-        require 'ridley'
-        require 'pathname'
-        require 'openssl'
+    if ce.nil? then
+        ce = '_default'
 
-        org_name = Pathname.new(url).basename
-        conn = Ridley.connection({
-            server_url: url,
-            organization: org_name,
-            client_name: c_name,
-            client_key: c_file,
-            ssl: { verify: false }
-        })
+    else
+        env_obj = Chef::Environment.load( ce )
 
-        if conn.environment.find(ce).nil?
-            env = conn.environment.new
-            env.name = ce
-            env.save
+        q = Chef::Search::Query.new
+        if q.search(:environment, "name:#{ce}").empty? then
+            Chef::Log.info( %Q(Created environment "#{env_obj}") )
+
+            env_obj.default_attributes['apps'] = {}
+            env_obj.default_attributes['apps']['static'] = {}
         end
+
+        env_obj.default_attributes['created_by'] ||= 'Vagrant'
+        env_obj.default_attributes['created_date'] ||= Time.new.strftime("%Y_%m_%d-%H:%M:%S")
+
+
+        env_obj.save
 
     end
 
