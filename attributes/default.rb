@@ -19,9 +19,9 @@
 default["apps"]['static']['source'] = 'http://chef.localdomain:10080/artifacts/static.war'
 default["apps"]['static']['cookbook_name'] = 'static_artifact'
 default["apps"]['static']['desired'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
-#default["apps"]['static']['artifact_build'] = nil
-#default["apps"]['static']['artifact_sha256'] = nil
-#default["apps"]['static']['rolling_deploy']['leg'] = 0
+default["apps"]['static']['artifact_build'] = 'http://chef.localdomain:10080/artifacts/static.war'
+default["apps"]['static']['artifact_sha256'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
+default["apps"]['static']['rolling_deploy']['leg'] = 0
 
 default["apps"]['static']['rolling_deploy']['bootstrap_group'] = Time.new.strftime("%Y%m%d_%H_%M_%S")
 default["apps"]['static']['rolling_deploy']['andon_cord'] = false
