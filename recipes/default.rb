@@ -1,6 +1,23 @@
 #
+# Author:: cookbook@opscode.com
+# CreatedBy:: Stathy Touloumis stathy@opscode.com
+#
 # Cookbook Name:: staticapp
 # Recipe:: default
+#
+# Copyright 2013, Opscode, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 include_recipe "java"
@@ -67,15 +84,15 @@ end
 #7) finally if both third and forth node succeeds then move to fifth and sixth node to do the deployments.
 rolling_deploy_leg 'install to current' do
   app_name 'static'
-  desired node['apps']['static']['checksum']
+  desired node['apps']['static']['desired']
   action :ready
 end
 
 remote_file 'static' do
-  path "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['checksum']}.war"
+  path "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war"
   source node['apps']['static']['source']
   mode "0644"
-  checksum node['apps']['static']['checksum']
+  checksum node['apps']['static']['desired']
   action :nothing
 
   subscribes :create, resources('rolling_deploy_leg[install to current]'), :immediately
@@ -88,7 +105,7 @@ template "#{node['apps']['static']['deploy_dir']}/shared/static.xml" do
   mode "644"
   variables(
     :app => 'static',
-    :war => "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['checksum']}.war"
+    :war => "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war"
   )
   action :nothing
 
@@ -149,13 +166,13 @@ http_request "validate deployment" do
   message ""
   action :get
 
-  only_if { File.exists?("#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['checksum']}.war") }
+  only_if { File.exists?("#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war") }
 end
 
 rolling_deploy_node "successful deploy" do
   app_name 'static'
   action :nothing
-  desired node['apps']['static']['checksum']
+  desired node['apps']['static']['desired']
 
   subscribes :success, resources('http_request[validate deployment]')
 end

@@ -1,0 +1,19 @@
+{
+  "name": "dbapp_leg_0",
+  "description": "dbapp leg disabled '0'",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "apps" : {
+      "dbapp" : {
+        "rolling_deploy" : {
+          "leg" : 0
+        }
+      }
+    }
+  },
+  "chef_type": "role",
+  "env_run_lists": {
+  }
+}

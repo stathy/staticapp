@@ -16,13 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#default["apps"]['static']['source'] = 'http://chef.localdomain:10080/artifacts/static.war'
-#default["apps"]['static']['artifact_sha256'] = '8ac5262dce6975dd360e0ad0a9288b5967a6af3c1c64bc4e472dec85e7ec36e7'
+default["apps"]['static']['source'] = 'http://chef.localdomain:10080/artifacts/static.war'
+default["apps"]['static']['cookbook_name'] = 'static_artifact'
+default["apps"]['static']['desired'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
 #default["apps"]['static']['artifact_build'] = nil
 #default["apps"]['static']['artifact_sha256'] = nil
+#default["apps"]['static']['rolling_deploy']['leg'] = 0
 
 default["apps"]['static']['rolling_deploy']['bootstrap_group'] = Time.new.strftime("%Y%m%d_%H_%M_%S")
-default["apps"]['static']['rolling_deploy']['leg'] = 0
 default["apps"]['static']['rolling_deploy']['andon_cord'] = false
 
 default["apps"]['static']["deploy_dir"] = "/srv/static_app"

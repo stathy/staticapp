@@ -1,5 +1,7 @@
 #
-# Author:: 
+# Author:: cookbook@opscode.com
+# CreatedBy:: Stathy Touloumis stathy@opscode.com
+#
 # Cookbook Name:: staticapp
 # Recipe:: monitor
 #
@@ -41,9 +43,11 @@ end
 
 rolling_deploy_artifact 'static' do
   app_name 'static'
+# Optional, if we want validation vs. only_if like below
   checksum node['apps']['static']['artifact_sha256']
+  desired node['apps']['static']['artifact_sha256']
   artifact_path static_artifact_path
-  cookbook_name 'static_artifact'
+  cookbook_name node['apps']['static']['cookbook_name']
 
   action :nothing
 
@@ -52,7 +56,7 @@ rolling_deploy_artifact 'static' do
 # checksum of assumed and what is on file needs to match, handled implicitly by provider or explict below
   only_if {
     ::File.exists?( static_artifact_path ) &&
-    Digest::SHA256.file( static_artifact_path ).eql?( node['apps']['static']['artifact_sha256'] )
+    Digest::SHA256.file( static_artifact_path ).to_s.eql?( node['apps']['static']['artifact_sha256'] )
   }
 end
 
