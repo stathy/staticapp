@@ -21,7 +21,7 @@ default["apps"]['static']['cookbook_name'] = 'static_artifact'
 default["apps"]['static']['desired'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
 default["apps"]['static']['artifact_build'] = 'http://chef.localdomain:10080/artifacts/static.war'
 default["apps"]['static']['artifact_sha256'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
-default["apps"]['static']['rolling_deploy']['leg'] = 0
+#default["apps"]['static']['rolling_deploy']['leg'] = 0
 
 default["apps"]['static']['rolling_deploy']['bootstrap_group'] = Time.new.strftime("%Y%m%d_%H_%M_%S")
 default["apps"]['static']['rolling_deploy']['andon_cord'] = false
@@ -33,14 +33,41 @@ default["tomcat"]["ssl_port"] = 8443
 default["tomcat"]["ajp_port"] = 8009
 default["tomcat"]["java_options"] = "-Xmx128M -Djava.awt.headless=true"
 default["tomcat"]["use_security_manager"] = false
+default["tomcat"]["service"]["retries"] = 12
+default["tomcat"]["service"]["retry_delay"] = 5
 
-default["tomcat"]["user"] = "tomcat"
-default["tomcat"]["group"] = "tomcat"
-default["tomcat"]["home"] = "/usr/share/tomcat6"
-default["tomcat"]["base"] = "/usr/share/tomcat6"
-default["tomcat"]["config_dir"] = "/etc/tomcat6"
-default["tomcat"]["log_dir"] = "/var/log/tomcat6"
-default["tomcat"]["tmp_dir"] = "/var/cache/tomcat6/temp"
-default["tomcat"]["work_dir"] = "/var/cache/tomcat6/work"
-default["tomcat"]["context_dir"] = "#{tomcat["config_dir"]}/Catalina/localhost"
-default["tomcat"]["webapp_dir"] = "/var/lib/tomcat6/webapps"
+case platform
+when "centos","redhat","fedora"
+  set["tomcat"]["user"] = "tomcat"
+  set["tomcat"]["group"] = "tomcat"
+  set["tomcat"]["home"] = "/usr/share/tomcat6"
+  set["tomcat"]["base"] = "/usr/share/tomcat6"
+  set["tomcat"]["config_dir"] = "/etc/tomcat6"
+  set["tomcat"]["log_dir"] = "/var/log/tomcat6"
+  set["tomcat"]["tmp_dir"] = "/var/cache/tomcat6/temp"
+  set["tomcat"]["work_dir"] = "/var/cache/tomcat6/work"
+  set["tomcat"]["context_dir"] = "#{tomcat["config_dir"]}/Catalina/localhost"
+  set["tomcat"]["webapp_dir"] = "/var/lib/tomcat6/webapps"
+when "debian","ubuntu"
+  set["tomcat"]["user"] = "tomcat6"
+  set["tomcat"]["group"] = "tomcat6"
+  set["tomcat"]["home"] = "/usr/share/tomcat6"
+  set["tomcat"]["base"] = "/var/lib/tomcat6"
+  set["tomcat"]["config_dir"] = "/etc/tomcat6"
+  set["tomcat"]["log_dir"] = "/var/log/tomcat6"
+  set["tomcat"]["tmp_dir"] = "/tmp/tomcat6-tmp"
+  set["tomcat"]["work_dir"] = "/var/cache/tomcat6"
+  set["tomcat"]["context_dir"] = "#{tomcat["config_dir"]}/Catalina/localhost"
+  set["tomcat"]["webapp_dir"] = "/var/lib/tomcat6/webapps"
+else
+  set["tomcat"]["user"] = "tomcat6"
+  set["tomcat"]["group"] = "tomcat6"
+  set["tomcat"]["home"] = "/usr/share/tomcat6"
+  set["tomcat"]["base"] = "/var/lib/tomcat6"
+  set["tomcat"]["config_dir"] = "/etc/tomcat6"
+  set["tomcat"]["log_dir"] = "/var/log/tomcat6"
+  set["tomcat"]["tmp_dir"] = "/tmp/tomcat6-tmp"
+  set["tomcat"]["work_dir"] = "/var/cache/tomcat6"
+  set["tomcat"]["context_dir"] = "#{tomcat["config_dir"]}/Catalina/localhost"
+  set["tomcat"]["webapp_dir"] = "/var/lib/tomcat6/webapps"
+end

@@ -17,7 +17,7 @@ ID = Time.new.strftime("%Y%m%d_%H_%M_%S")
 
 Vagrant::Config.run do |config|
 
-    config.vm.box = "centos_58_pkg"
+    config.vm.box = "ubuntu_10_11-4"
 
     {
       :monitor => {
@@ -30,14 +30,15 @@ Vagrant::Config.run do |config|
       :a1 => {
             :ip       => '192.168.65.211',
             :memory   => 374,
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
+#            :run_list => %w( role[base_ubuntu] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a2 => {
             :ip       => '192.168.65.212',
             :memory   => 374,
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
@@ -45,27 +46,27 @@ Vagrant::Config.run do |config|
             :ip       => '192.168.65.213',
             :memory   => 374,
             :env      => 'static',
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a4 => {
             :ip       => '192.168.65.214',
             :memory   => 374,
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a5 => {
             :ip       => '192.168.65.215',
             :memory   => 374,
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
       :a6 => {
             :ip       => '192.168.65.216',
             :memory   => 374,
-            :run_list => %w( role[base_centos] recipe[staticapp] ),
+            :run_list => %w( role[base_ubuntu] recipe[staticapp] ),
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },

@@ -38,7 +38,7 @@ remote_file 'static' do
 
 # Not initializing, need to have checksum and source defined, set from Jenkins to env attributes,
 # handled implicitly by prov
-  not_if { node['apps']['static']['artifact_sha256'].nil? && node['apps']['static']['artifact_build'].nil? }
+  not_if { node['apps']['static']['artifact_sha256'].nil? || node['apps']['static']['artifact_build'].nil? }
 end
 
 rolling_deploy_artifact 'static' do
@@ -49,9 +49,9 @@ rolling_deploy_artifact 'static' do
   artifact_path static_artifact_path
   cookbook_name node['apps']['static']['cookbook_name']
 
-  action :nothing
+  action :deploy
 
-  subscribes :deploy, resources('remote_file[static]')
+#  subscribes :deploy, resources('remote_file[static]')
 
 # checksum of assumed and what is on file needs to match, handled implicitly by provider or explict below
   only_if {
