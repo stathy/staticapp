@@ -8,6 +8,7 @@ License and Author
 ==================
 
 Author:: cookbooks@opscode.com
+
 CreatedBy:: Stathy Touloumis <stathy@opscode.com>
 
 Copyright:: 2013, Opscode, Inc
