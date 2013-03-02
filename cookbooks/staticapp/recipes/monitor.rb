@@ -42,6 +42,10 @@ remote_file 'static' do
 end
 
 rolling_deploy_artifact 'static' do
+# Overwrite default attribute in monitor so initialization can take place.
+  if node['apps']['static']['desired'].eql?('604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7')
+    node.set['apps']['static']['desired'] = 'false'
+  end
   app_name 'static'
 # Optional, if we want validation vs. only_if like below
   checksum node['apps']['static']['artifact_sha256']
