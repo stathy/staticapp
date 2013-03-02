@@ -1,0 +1,31 @@
+{
+  "name": "base_core",
+  "description": "Base role applied to all nodes.",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "authorization" : {
+      "sudo" : {
+        "users" : ["ubuntu","chef","vagrant","jenkins","touloumiss"],
+        "passwordless" : true
+      }
+    },
+    "chef_client" : {
+        "bin" : "/usr/bin/chef-client",
+        "conf_dir" : "/etc/chef",
+        "interval" : "20",
+        "splay" : "2"
+      }
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[ohai]",
+    "recipe[git]",
+    "recipe[build-essential]",
+    "recipe[sudo]",
+    "recipe[chef-client::service]"
+  ],
+  "env_run_lists": {
+  }
+}

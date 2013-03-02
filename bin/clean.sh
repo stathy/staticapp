@@ -1,7 +1,7 @@
 echo "Pruning attributes in static environment"
 knife environment from file "./environments/static.json" > /dev/null
 echo 'Deleting artifact cookbook "static_artifact"'
-knife cookbook delete 'static_artifact' --yes
+knife cookbook delete 'static_artifact' '0.2.0' --yes
 
 NODES=$( knife exec -E 'nodes.all { |n| puts n.name if n.name.match("^java") }' )
 for n in $NODES; do
