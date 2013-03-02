@@ -27,7 +27,7 @@ static_artifact_path = File.join( Chef::Config['file_cache_path'], "#{node['apps
 
 remote_file 'static' do
   path static_artifact_path
-  source node['apps']['static']['artifact_build'] || 'http://foo/bar.war'
+  source node['apps']['static']['artifact_build']
   mode "0644"
   checksum node['apps']['static']['artifact_sha256']
 
@@ -47,7 +47,10 @@ rolling_deploy_artifact 'static' do
   checksum node['apps']['static']['artifact_sha256']
   desired node['apps']['static']['artifact_sha256']
   artifact_path static_artifact_path
+
+# Optionally deploy through cookbook
   cookbook_name node['apps']['static']['cookbook_name']
+  cookbook_version '0.2.0'
 
   action :deploy
 

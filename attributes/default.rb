@@ -18,7 +18,7 @@
 
 default["apps"]['static']['source'] = 'http://chef.localdomain:10080/artifacts/static.war'
 default["apps"]['static']['cookbook_name'] = 'static_artifact'
-default["apps"]['static']['desired'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
+#default["apps"]['static']['desired'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
 default["apps"]['static']['artifact_build'] = 'http://chef.localdomain:10080/artifacts/static.war'
 default["apps"]['static']['artifact_sha256'] = '604bc894d6ffd68c321ba5a61d419ee0901112af88554e23c07578bfab07c7d7'
 #default["apps"]['static']['rolling_deploy']['leg'] = 0

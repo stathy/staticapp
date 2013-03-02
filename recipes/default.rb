@@ -88,7 +88,8 @@ rolling_deploy_leg 'install to current' do
   action :ready
 end
 
-remote_file 'static' do
+cookbook_file 'static' do
+  cookbook 'static_artifact'
   path "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war"
   source node['apps']['static']['source']
   mode "0644"
@@ -96,6 +97,18 @@ remote_file 'static' do
   action :nothing
 
   subscribes :create, resources('rolling_deploy_leg[install to current]'), :immediately
+end
+
+remote_file 'static' do
+  path "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war"
+  source "http://foo.com/bar.war"
+  mode "0644"
+  checksum node['apps']['static']['desired']
+  action :nothing
+  
+# Optional way to obtain payload if we are not using cookbook method.
+#  subscribes :create, resources('rolling_deploy_leg[install to current]'), :immediately
+  only_if { false }
 end
 
 # Only write out new application context when we are ready to install on this leg and have acquired app
@@ -107,9 +120,9 @@ template "#{node['apps']['static']['deploy_dir']}/shared/static.xml" do
     :app => 'static',
     :war => "#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war"
   )
-  action :nothing
+  action :create
 
-  subscribes :create, resources('remote_file[static]'), :immediately
+#  subscribes :create, resources('cookbook_file[static]'), :immediately
 end
 
 #Link ROOT context to our custom app
@@ -122,14 +135,14 @@ directory "#{node['tomcat']['webapp_dir']}/ROOT" do
   recursive true
   action :nothing
 
-  subscribes :delete, resources('remote_file[static]'), :immediately
+  subscribes :delete, resources("template[#{node['apps']['static']['deploy_dir']}/shared/static.xml]"), :immediately
 end
 
 directory "#{node['tomcat']['work_dir']}/Catalina" do
   recursive true
   action :nothing
 
-  subscribes :delete, resources('remote_file[static]'), :immediately
+  subscribes :delete, resources("template[#{node['apps']['static']['deploy_dir']}/shared/static.xml]"), :immediately
 end
 
 
@@ -150,11 +163,13 @@ service "tomcat" do
   subscribes :stop, resources( "template[/etc/default/tomcat6]" )
   subscribes :stop, resources( "template[/etc/tomcat6/server.xml]" )
   subscribes :stop, resources( "link[#{node['tomcat']['context_dir']}/ROOT.xml]" )
+  subscribes :stop, resources( "template[#{node['apps']['static']['deploy_dir']}/shared/static.xml]" )
     
   subscribes :start, resources( "template[/etc/default/tomcat6]" )
   subscribes :start, resources( "template[/etc/tomcat6/server.xml]" )
   subscribes :start, resources( "link[#{node['tomcat']['context_dir']}/ROOT.xml]" )
   subscribes :start, resources( 'remote_file[static]' )
+  subscribes :start, resources( "template[#{node['apps']['static']['deploy_dir']}/shared/static.xml]" )
 
 end
 
@@ -165,6 +180,9 @@ http_request "validate deployment" do
 #  url "http://localhost:8080/fail"
   message ""
   action :get
+
+  retries 2
+  retry_delay 5
 
   only_if { File.exists?("#{node['apps']['static']['deploy_dir']}/releases/#{node['apps']['static']['desired']}.war") }
 end
