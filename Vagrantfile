@@ -69,7 +69,13 @@ Vagrant::Config.run do |config|
             :env      => 'static',
             :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
       },
-
+      :a7 => {
+            :ip       => '192.168.65.217',
+            :memory   => 374,
+            :run_list => %w( role[base_core] recipe[staticapp] ),
+            :env      => 'static',
+            :attr     => { 'apps' => { 'static' => { 'rolling_deploy' => { 'bootstrap_group' => ID, } } } }
+      },
     }.each do |name,cfg|
 
         group_label = cfg[:env] || '_default'

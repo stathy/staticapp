@@ -1,6 +1,6 @@
 {
-  "name": "staticapp_leg_1",
-  "description": "staticapp leg enabled '1'",
+  "name": "staticapp_leg_3",
+  "description": "staticapp leg enabled '3'",
   "json_class": "Chef::Role",
   "default_attributes": {
   },
@@ -8,7 +8,7 @@
     "apps" : {
       "static" : {
         "rolling_deploy" : {
-          "leg" : 1
+          "leg" : 3
         }
       }
     }
