@@ -78,7 +78,9 @@ Vagrant::Config.run do |config|
       },
     }.each do |name,cfg|
 
-        group_label = cfg[:env] || '_default'
+        group_label = cfg[:env]
+        chef_env = create_chef_env(group_label)
+
         hash = Digest::MD5.new.hexdigest(group_label)
         vagrant_group = "/#{group_label}"
 
@@ -99,7 +101,6 @@ Vagrant::Config.run do |config|
             end
     
             vm_cfg.vm.provision :chef_client do |chef|
-                chef_env = create_chef_env(group_label)
                 chef.chef_server_url = "https://chef.localdomain/organizations/opscode"
                 chef.validation_key_path = "#{ENV['HOME']}/.chef/chef_localdomain-opscode-validator.pem"
                 chef.validation_client_name = "opscode-validator"
@@ -111,10 +112,10 @@ Vagrant::Config.run do |config|
                 chef.json = cfg[:attr] if cfg[:attr].is_a?(Hash)
     
                 if cfg[:run_list].nil?
-                    cfg['role'] ||= []
-                    cfg['role'].each { |r| chef.add_role(r) }
-                    cfg['recipe'] ||= []                
-                    cfg['recipe'].each { |r| chef.add_recipe(r) }
+                    cfg[:roles] ||= []
+                    cfg[:roles].each { |r| chef.add_role(r) }
+                    cfg[:recipes] ||= []                
+                    cfg[:recipes].each { |r| chef.add_recipe(r) }
                 else
                     chef.run_list = cfg[:run_list]
                 end
@@ -134,21 +135,21 @@ def create_chef_env(ce = '_default')
         ce = '_default'
 
     else
-        env_obj = Chef::Environment.load( ce )
+        env_obj = Chef::Environment.new
+        env_obj.name( ce )
+      
+        begin
+            env_obj = Chef::Environment.load( ce )
 
-        q = Chef::Search::Query.new
-        if q.search(:environment, "name:#{ce}").empty? then
-            Chef::Log.info( %Q(Created environment "#{env_obj}") )
+        rescue Net::HTTPServerException => e
+            raise e unless e.response.code == "404"
+            env_obj.default_attributes['created_by'] ||= 'Vagrant'
+            env_obj.default_attributes['created_date'] ||= Time.new.strftime("%Y_%m_%d-%H:%M:%S")
 
-            env_obj.default_attributes['apps'] = {}
-            env_obj.default_attributes['apps']['static'] = {}
+            env_obj.override_attributes( { 'apps' => { 'static' => {} } } )
+
+            env_obj.create
         end
-
-        env_obj.default_attributes['created_by'] ||= 'Vagrant'
-        env_obj.default_attributes['created_date'] ||= Time.new.strftime("%Y_%m_%d-%H:%M:%S")
-
-
-        env_obj.save
 
     end
 
@@ -158,3 +159,12 @@ end
 
 __END__
 
+master_config.vm.provision :shell, :inline => <<-INSTALL_OMNIBUS
+    if [ ! -d '/opt/chef' ] || 
+       [ ! $(chef-solo --v | awk "{print \\$2}") = "#{OMNIBUS_CHEF_VERSION}" ]
+    then
+       wget -qO- https://www.opscode.com/chef/install.sh | sudo bash -s -- -v "#{OMNIBUS_CHEF_VERSION}"
+    else
+       echo "Chef #{OMNIBUS_CHEF_VERSION} already installed...skipping installation."
+    fi 
+INSTALL_OMNIBUS
