@@ -1,0 +1,19 @@
+{
+  "name": "staticapp_leg_blue",
+  "description": "static app leg 'blue'",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "apps" : {
+      "static" : {
+        "rolling_deploy" : {
+          "leg" : "blue"
+        }
+      }
+    }
+  },
+  "chef_type": "role",
+  "env_run_lists": {
+  }
+}
