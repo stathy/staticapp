@@ -4,6 +4,8 @@
 # CreatedBy:: Stathy Touloumis <stathy@opscode.com>
 #
 #
+# Add RVM's lib directory to the load path.
+# $:.unshift(File.expand_path('./gems', '/home/touloumiss/.rvm/gems/ruby-1.9.3-p448@chef/'))
 
 require 'chef/environment'
 require 'chef/knife'
