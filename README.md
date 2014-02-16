@@ -7,7 +7,7 @@ are driven by Jenkins through env attribute updates, monitored and identified fo
 License and Author
 ==================
 
-Author:: Stathy Touloumis <stathy@getchef.com>
+Author:: Chef <cookbooks@getchef.com>
 
 CreatedBy:: Stathy Touloumis <stathy@getchef.com>
 
